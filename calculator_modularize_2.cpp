@@ -14,7 +14,7 @@ struct tokens{
 	int index;
 };
 
-void calcu();
+float calcu(string line);
 
 token readNumber(string line,int &index)
 {
@@ -87,6 +87,7 @@ token multi(string line,int &index,vector<tokens> &tokens0,const char &c)
 void tokenize(string line,vector<tokens> &tokens0)
 {
 	int index = 0;
+	int index2 = line.length()-1;
 	tokens tokens1;
 	//tokenにわけてtokensにいれる
 	while(index < line.length()){
@@ -107,6 +108,7 @@ void tokenize(string line,vector<tokens> &tokens0)
 			tokens1.index = index;
 		}else{
 			cout << "Invalid character found: " << line[index] << endl;
+			cout << line[index] << endl;
 			exit(1);
 		}
 		//配列に加える！
@@ -124,8 +126,7 @@ float evaluate(vector<tokens> &tokens1)
 	//配列[0]には上で値を入れたからindexは1から
 	int index = 1;
 
-	while(index < tokens1.size())
-	{
+	while(index < tokens1.size()){
 		if(tokens1[index].cont.type == "NUMBER"){
 			if (tokens1[index-1].cont.type == "PLUS"){
 				answer += tokens1[index].cont.number;
@@ -141,10 +142,38 @@ float evaluate(vector<tokens> &tokens1)
 	return answer;
 }
 
+void check(string &line){
+	int index =0;
+	int index2 = line.length()-1;
+	int flag =0;
+	float newline;
+
+	for (;index<index2;index++){
+		if(line[index] == '('){
+			for (; index2 >=index ; index2--){
+				if(line[index2] == ')'){
+					flag = 1;
+					newline = calcu(line.substr(index+1,index2-index-1));
+					line.replace(index,index2-index+1,to_string(newline));
+					break;
+				}
+			}
+			if (index<0){
+			cout << "error" << endl;
+			exit(1);
+			}
+		}
+		if(flag){
+			break;
+		}
+	}
+}
+
 float calcu(string line){
 	std::vector<tokens> tokens0;
 	float answer;
 
+	check(line);
 	tokenize(line,tokens0);
 	answer = evaluate(tokens0);
 	return answer;
