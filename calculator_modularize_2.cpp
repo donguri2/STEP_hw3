@@ -114,7 +114,7 @@ void tokenize(string line,vector<tokens> &tokens0)
 	}
 }
 
-int evaluate(vector<tokens> &tokens1)
+float evaluate(vector<tokens> &tokens1)
 {
 	float answer = 0;
 	//配列の最初に+をいれる！
