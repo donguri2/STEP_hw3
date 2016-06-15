@@ -6,7 +6,7 @@ using namespace std;
 
 struct token{
 	string type;
-	int number;
+	float number;
 };
 
 struct tokens{
@@ -14,27 +14,29 @@ struct tokens{
 	int index;
 };
 
+void calcu();
+
 token readNumber(string line,int &index)
 {
 	token ret;
-	int number = 0;
+	float number = 0;
 	int flag = 0;		//小数点がでてきたら旗を上げる
 	float keta = 0.1;
 	//数字ではなくなるまで読む
-	while(index < line.length() && isdigit(line[index]))
+	while(index < line.length())
 	{
+		if(isdigit(line[index]) || line[index] == '.'){
 		//読み込んだものが小数点だったら旗を立てる
-		if(line[index] == '.')
-		{
-			flag = 1;
-		}
-
-		if(!flag)
-		{
-			number = number * 10 + (line[index] - '0');
+			if(line[index] == '.'){
+				flag = 1;
+			}else if(!flag){
+				number = number * 10 + (line[index] - '0');
+			}else{
+				number += (line[index] - '0') * keta;
+				keta *= 0.1;
+			}
 		}else{
-			number += line[index] - '0' * keta;
-			keta *= 0.1;
+			break;
 		}
 		index++;
 	}
@@ -114,7 +116,7 @@ void tokenize(string line,vector<tokens> &tokens0)
 
 int evaluate(vector<tokens> &tokens1)
 {
-	int answer = 0;
+	float answer = 0;
 	//配列の最初に+をいれる！
 	tokens tokens0;
 	tokens0.cont.type = "PLUS";		//最初は必ず+!!
@@ -139,16 +141,23 @@ int evaluate(vector<tokens> &tokens1)
 	return answer;
 }
 
+float calcu(string line){
+	std::vector<tokens> tokens0;
+	float answer;
+
+	tokenize(line,tokens0);
+	answer = evaluate(tokens0);
+	return answer;
+}
+
 int main(int argc, char const *argv[])
 {
 	string line = "";
-	int answer = 0;
-	std::vector<tokens> tokens0;
+	float answer = 0;
 
 	cout << ">";
 	cin >> line;
-	tokenize(line,tokens0);
-	answer = evaluate(tokens0);
+	answer = calcu(line);
 	cout << "ansewr = " << answer << endl;
 	return 0;
 }
