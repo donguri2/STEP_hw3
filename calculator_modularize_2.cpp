@@ -20,14 +20,12 @@ token readNumber(string line,int &index)
 {
 	token ret;
 	float number = 0;
-	int flag = 0;		//小数点がでてきたら旗を上げる
+	int flag = 0;							//小数点がでてきたら旗を上げる
 	float keta = 0.1;
-	//数字ではなくなるまで読む
-	while(index < line.length())
+	while(index < line.length())			//数字ではなくなるまで読む
 	{
 		if(isdigit(line[index]) || line[index] == '.'){
-		//読み込んだものが小数点だったら旗を立てる
-			if(line[index] == '.'){
+			if(line[index] == '.'){			//読み込んだものが小数点だったら旗を立てる
 				flag = 1;
 			}else if(!flag){
 				number = number * 10 + (line[index] - '0');
@@ -56,7 +54,7 @@ token readPlus(string line,int &index)
 token readMinus(string &line,int &index)
 {
 	token ret;
-	if (line[index+1] == '-'){
+	if (line[index+1] == '-'){				//-(-3)=3などのように-が2個続いたら+にする
 		ret.type = "PLUS";
 		line[index+1] = '+';
 	}else{
@@ -72,20 +70,20 @@ token multi(string line,int &index,vector<tokens> &tokens0,const char &c)
 	tokens last;
 	ret.type = "NUMBER";
 	index++;
-	last = tokens0.back();		//一つ前の要素
-	if (last.cont.type != "NUMBER")	//記号が二つ続いてたら
+	last = tokens0.back();				//一つ前の要素
+	if (last.cont.type != "NUMBER")		//記号が二つ続いてたら
 	{
 		cout << "symbol error" << endl;
 	}
-	next = readNumber(line,index);
-	if (c == '*')
+	next = readNumber(line,index);		//次の数を持ってくる。ex)3-5*5=3-25の状態に持ってく
+	if (c == '*')						//掛け算の場合
 	{
 		ret.number = last.cont.number * next.number;
-	}else if (c == '/')
+	}else if (c == '/')					//割り算の場合
 	{
 		ret.number = last.cont.number / next.number;
 	}
-	tokens0.pop_back();
+	tokens0.pop_back();					//一つ後の数字はもう計算しているため、消す。
 	return ret;
 }
 
@@ -147,6 +145,7 @@ float evaluate(vector<tokens> &tokens1)
 	return answer;
 }
 
+//()があったら先にその中を計算してしまう
 void check(string &line){
 	int index =0;
 	int index2 = line.length()-1;
@@ -174,6 +173,7 @@ void check(string &line){
 	}
 }
 
+//計算の機能をまとめたもの
 float calcu(string line){
 	std::vector<tokens> tokens0;
 	float answer;
