@@ -53,10 +53,15 @@ token readPlus(string line,int &index)
 	return ret;
 }
 
-token readMinus(string line,int &index)
+token readMinus(string &line,int &index)
 {
 	token ret;
+	if (line[index+1] == '-'){
+		ret.type = "PLUS";
+		line[index+1] = '+';
+	}else{
 	ret.type = "MINUS";
+	}
 	index++;
 	return ret;
 }
