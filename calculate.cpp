@@ -58,7 +58,7 @@ void Minus(token &ret,string &line,const int &index){
 	}
 }
 
-token evaluatePlusAndMinus(string line,int &index,const string &mark)
+token read_PlusAndMinus(string line,int &index,const string &mark)
 {
 	token ret;
 	if(mark == "MINUS"){	//MINUSだった場合
@@ -101,9 +101,9 @@ void tokenize(string line,vector<tokens> &tokens0)
 		if (isdigit(line[index])){
 			tokens1.cont = readNumber(line,index);
 		}else if (line[index] == '+'){
-			tokens1.cont = evaluatePlusAndMinus(line,index,"PLUS");
+			tokens1.cont = read_PlusAndMinus(line,index,"PLUS");
 		}else if (line[index] == '-'){
-			tokens1.cont = evaluatePlusAndMinus(line,index,"MINUS");
+			tokens1.cont = read_PlusAndMinus(line,index,"MINUS");
 		}else if(line[index] == '*' ){
 			tokens1.cont = evaluateMultiplyAndDivide(line,index,tokens0,"MULTI");
 		}else if (line[index] == '/'){
@@ -119,7 +119,7 @@ void tokenize(string line,vector<tokens> &tokens0)
 	}
 }
 
-float evaluate(vector<tokens> &tokens1)
+float evaluatePlusAndMinus(vector<tokens> &tokens1)
 {
 	float answer = 0;
 	//配列の最初に+をいれる！
@@ -174,9 +174,9 @@ float calcu(string line){
 	std::vector<tokens> tokens0;
 	float answer;
 
-	evaluateBracket(line);
-	tokenize(line,tokens0);
-	answer = evaluate(tokens0);
+	evaluateBracket(line);		//先に()計算
+	tokenize(line,tokens0);		//区切る
+	answer = evaluatePlusAndMinus(tokens0);
 	return answer;
 }
 
